@@ -1,0 +1,12 @@
+---
+title: "About"
+image: rstudio_logo.png
+about:
+  template: jolla
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com
+---
+
+About this blog
