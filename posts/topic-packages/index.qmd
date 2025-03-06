@@ -3,6 +3,7 @@ title: "R Packages - 3/7/25"
 description: "A deep dive into R packages"
 author: "Daniel B. Cooper ([daniel.cooper@ky.gov](mailto:daniel.cooper@ky.gov))"
 date: "3/7/2025"
+date-modified: "3/7/2025"
 categories:
   - code
 image: lifecycle.svg
@@ -12,15 +13,17 @@ image: lifecycle.svg
 
 ## What is a package?
 
-*Packages* are collections of R functions, data, and compiled code in a well-defined format. The directory where packages are stored is called the *library*.
+*Packages* are collections of R functions, data, and compiled code in a well-defined format. The directory where packages are stored is called the *library*.
 
 ## What is "Base R?"
 
-Base R can refer to a collection of packages that are installed by default with R and live in the "system library." They are "built-in." These basic functions allow R to work. We can use the `sessionInfo()` function to find out which version of R we're running and which packages are "attached." When a package is "attached," functions that belong to that package are available for use by the user. We can also see package versions next to their name.
+Base R can refer to a collection of packages that are installed by default with R and live in the "system library." They are "built-in." These basic packages allow R to work. We can use the `sessionInfo()` function to find which packages are being used by our current R session.
 
 ```{r}
 sessionInfo()
 ```
+
+When a package is "attached," functions that belong to that package are available for use by the user. We can also see package versions next to their name.
 
 ::: callout-tip
 ### Tip: Visual Cues
@@ -34,7 +37,7 @@ Package development is community driven, and many packages have overlapping func
 
 Choice of package or function depend on what functionality is needed, what you value, and your aversion to risk. By risk, I mean the potential for functions to change or break when either your R version changes or the package version changes.
 
-You will see me mostly using tidyverse packages because I value their human readability, consistent structure, and stability of included functions. "Stability" harkens to the "[lifecycle](https://lifecycle.r-lib.org/articles/stages.html#superseded)" of a package or function. Perhaps you're still concerned with sustainability and "dependency-bloat," so you stick with base R. Maybe you need functions that perform better, so you use the [{data.table}](Extension%20of%20%60data.frame%60%20•%20data.table) package, another R "dialect." Maybe you just prefer to use whichever functions require the least amount of code. There are other reasons you will come across that lead you to choose when and where to use a specific function.
+You will see me mostly using tidyverse packages because I value their human readability, consistent structure, and stability of included functions. Perhaps you're still concerned with sustainability and "dependency-bloat," so you stick with base R. Maybe you need functions that perform better, so you use the [{data.table}](Extension%20of%20%60data.frame%60%20•%20data.table) package, another R "dialect." Maybe you just prefer to use whichever functions require the least amount of code. There are other reasons you will come across that lead you to choose when and where to use a specific function.
 
 ::: callout-tip
 ### How can I tell if a package is popular or stable?
@@ -47,11 +50,12 @@ Do some research! When was the last update? Check out the version history. Find 
 Use the `install.packages()` function to install new packages. This will attempt to download and install a package from a "package repository." By default, R will use the ["CRAN"](The%20Comprehensive%20R%20Archive%20Network) repository (Comprehensive R Archive Network). There are other repos, like the public [Posit Package Manager](Home%20%7C%20Package%20Manager) which have a wider range of package versions built for different versions of R. To manage packages, it's easiest to use the RStudio GUI, but see `?update.packages()` for programmatic options.
 
 ```{r}
-# install.packages("tidyr", repos = "http://cran.us.r-project.org")
-
 install.packages("tidyr", repos = "https://packagemanager.posit.co/cran/latest")
+install.packages("dplyr", repos = "https://packagemanager.posit.co/cran/latest")
+install.packages("conflicted", repos = "https://packagemanager.posit.co/cran/latest")
 
 # not run:
+# install.packages("tidyr", repos = "http://cran.us.r-project.org")
 # ?update.packages()
 ```
 
@@ -62,12 +66,12 @@ Some packages have dependencies "under the hood." In other words, some packages 
 ::: callout-caution
 #### Caution
 
-When you update a package you like, R may not successfully install the correct version of a dependency if you already had the needed package installed. This leads to several troubleshooting steps of updating packages, and what I recommend to avoid updating unless you have a good reason to do so. At a later time, we will discuss {renv}, an R package/environment manager.
+When you update a package, R may not successfully install the correct version of a dependency if you already had a previous version installed. This leads to several troubleshooting steps of updating packages. I recommend to avoid updating unless you have a good reason to do so. At a later time, we will discuss {renv}, an R environment manager.
 :::
 
 ### Loading/Attaching a package
 
-Packages are attached using the `library()` or `require()` functions. You will most often see `library()`. R is smart enough to choose your default package library, so you will usually not see the library specified here. You can view your library file paths available to your R session using the `.libPaths()` function
+Packages are attached using the `library()` or `require()` functions. You will most often see `library()`. R will look to default library paths, so you will usually ***not*** see the library specified when using `library()`. You can view your library file paths available to your R session using the `.libPaths()` function.
 
 ```{r}
 .libPaths()
@@ -98,7 +102,7 @@ To disambiguate your code, you can use functions from a particular package *with
 # tidyr::pivot_longer()
 ```
 
-In this example, I'm accessing the function called `pivot_longer()` from the {tidyr} package. Notably, this did *not* require attaching the {tidyr} package using `library()` BUT the package would still need to be installed first using `install.packages()`. While this is less clean (and longer!) than simply attaching the full package, I believe beginner R programmers greatly benefit from disambiguating their code using `::`.
+In this example, I'm accessing the function called `pivot_longer()` from the {tidyr} package. Notably, this did *not* require attaching the {tidyr} package using `library()`, BUT the package would still need to be installed first using `install.packages()`. While this is less clean (and longer!) than simply attaching the full package, I believe beginner R programmers greatly benefit from disambiguating their code using `::`.
 
 ## Unexpected behavior
 
@@ -119,10 +123,10 @@ We can see that the `dplyr::filter()` function masked the `stats::filter()` func
 ::: callout-important
 ### Important
 
-The order in which you attach a package determines which function will be used when you try to use it in your code. With each new package attached, all "old" functions with the same name will be "masked." This is what disambiguating your code using `::` helps with.
+The order in which you attach a package determines which version of a function will be used when you call that function in your code. With each new package attached, all previously attached functions with the same name will be "masked." This is what disambiguating your code using `::` helps with.
 :::
 
-The {conflicted} package helps you catch masking and ***forces*** the user to decide which function to prioritize.
+The {conflicted} package helps you identify masking and ***forces*** the user to decide which function to prioritize.
 
 ```{r}
 detach("package:tidyverse", unload = TRUE)
@@ -134,7 +138,7 @@ library(dplyr)
 # filter(starwars, species == "Human")
 ```
 
-If the above `filter()` was run, it would result in an Error, and prevent me from rendering this document. The error would read:
+If the above `filter()` was run, it would result in an **Error**, and prevent me from rendering this document. The error would read:
 
 ```         
 Error:
@@ -149,14 +153,20 @@ Backtrace:
  1. conflicted (local) `<fn>`()
 ```
 
+Notice how disambiguating with `dplyr::filter()` runs fine:
+
 ```{r}
 dplyr::filter(starwars, species == "Human")
 ```
 
+To fix the problem, let's use the `conflicts_prefer()` function from the {conflicted} package to specify which version of `filter()` we actually want to use.
+
 ```{r}
-conflicts_prefer(dplyr::filter)
+conflicted::conflicts_prefer(dplyr::filter)
 
 ```
+
+Now, we can use our preferred `filter()` without the call to `dplyr::`
 
 ```{r}
 filter(starwars, species == "Human")
@@ -171,6 +181,8 @@ Notice how I simply use the object called `starwars`? That's an example of a bui
 
 ### Lifecycle
 
+![](lifecycle.svg){width="500"}
+
 Packages change over time. Some very prominent packages, like tidyr, supersede old packages while retaining some of the older functions. E.g. `gather()` versus `pivot_longer()`. View the help pages!
 
 ```{r}
@@ -178,9 +190,11 @@ Packages change over time. Some very prominent packages, like tidyr, supersede o
 # ?tidyr::gather()
 # ?tidyr::pivot_longer()
 
+# create new data "starwars_select" from "starwars" and select specified columns. 
 starwars_select <- starwars |> 
   dplyr::select(name, hair_color, skin_color, eye_color)
 
+# from "starwars_select", use gather() to make data longer format, then sort by name
 starwars_select |> 
   tidyr::gather(key = "attribute", value = "value", hair_color, skin_color, eye_color, na.rm = TRUE) |> 
   dplyr::arrange(name)
@@ -188,11 +202,14 @@ starwars_select |>
 ```
 
 ```{r}
+# Use pivot_longer() to make data longer format
 starwars_select |> 
   tidyr::pivot_longer(cols = c(hair_color, skin_color, eye_color), names_to = "attribute", values_to = "values", values_drop_na = TRUE) |> 
   dplyr::arrange(name)
 
 ```
+
+We can use the `pkg_lifecycle_statuses()` function from the {lifecycle} package to view function statuses in a specified package. Any function not "stable" will be listed. "Stability" harkens to the "[lifecycle](https://lifecycle.r-lib.org/articles/stages.html#superseded)" of a package or function.
 
 ```{r}
 lifecycle::pkg_lifecycle_statuses("tidyr")
