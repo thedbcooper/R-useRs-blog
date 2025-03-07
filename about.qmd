@@ -5,8 +5,11 @@ about:
   template: jolla
   links:
     - icon: github
-      text: Github
-      href: https://github.com
+      text: KDPH Github
+      href: https://github.com/KentuckyDepartmentForPublicHealth
+    - icon: microsoft-teams
+      text: KDPH R useRs Group Teams
+      href: https://teams.microsoft.com/l/team/19%3AI1HNXlRRlmlIjMla9_GHnCXVhGI6r0QgI2dbROv0Dok1%40thread.tacv2/conversations?groupId=253bc899-d557-4890-839f-42babe10d514&tenantId=d77c7f4d-d767-461f-b625-0628792e9e2a
 ---
 
-About this blog
+This blog hosts posts written for presentation to the Kentucky Department for Public Health R useRs Group.

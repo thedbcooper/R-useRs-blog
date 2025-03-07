@@ -1,15 +1,15 @@
 ---
-title: "R Packages - 3/7/25"
-description: "A deep dive into R packages"
+title: "R Packages Deep Dive"
+description: "R packages can get overwhelming. This post discusses foundational concepts of packages, how to install and load, and describes some best practices for handling multiple packages in your R code."
 author: "Daniel B. Cooper ([daniel.cooper@ky.gov](mailto:daniel.cooper@ky.gov))"
-date: "3/7/2025"
-date-modified: "3/7/2025"
+date: "3/6/2025"
+date-modified: last-modified
 categories:
   - code
 image: lifecycle.svg
 ---
 
-# R Packages Deep Dive
+![](images/logo-dplyr.png)
 
 ## What is a package?
 
@@ -45,7 +45,7 @@ You will see me mostly using tidyverse packages because I value their human read
 Do some research! When was the last update? Check out the version history. Find the source code on GitHub; look at how many stars/follows it has. Look at the dates of forum and blog posts that use the function/package in question. Your knowledge of which packages are most popular will grow with experience.
 :::
 
-### How to install an R package
+## How to install an R package
 
 Use the `install.packages()` function to install new packages. This will attempt to download and install a package from a "package repository." By default, R will use the ["CRAN"](The%20Comprehensive%20R%20Archive%20Network) repository (Comprehensive R Archive Network). There are other repos, like the public [Posit Package Manager](Home%20%7C%20Package%20Manager) which have a wider range of package versions built for different versions of R. To manage packages, it's easiest to use the RStudio GUI, but see `?update.packages()` for programmatic options.
 
@@ -59,7 +59,13 @@ install.packages("conflicted", repos = "https://packagemanager.posit.co/cran/lat
 # ?update.packages()
 ```
 
-#### Package Dependencies
+::: callout-tip
+#### You only need to install one time
+
+Typically, you would not have `install.packages()` appear in your code. I use it here for demonstration purposes. Usually, when I want to install a package, I type the function into the console. Any R session you open will have access to your package library. The exception is if you are using an environment manager like {renv}.
+:::
+
+### Package Dependencies
 
 Some packages have dependencies "under the hood." In other words, some packages rely on the functions/source code of other packages to work. R is smart enough to install dependencies by default, which means there will be package names you may *not* recognize in your library.
 
@@ -103,6 +109,10 @@ To disambiguate your code, you can use functions from a particular package *with
 ```
 
 In this example, I'm accessing the function called `pivot_longer()` from the {tidyr} package. Notably, this did *not* require attaching the {tidyr} package using `library()`, BUT the package would still need to be installed first using `install.packages()`. While this is less clean (and longer!) than simply attaching the full package, I believe beginner R programmers greatly benefit from disambiguating their code using `::`.
+
+### Where does it go in my script? 
+
+Generally, I like to load all packages at the beginning of my R script. I will have a code chunk or section dedicated to "setup," which might include several calls to `library()` and maybe loading in some data.
 
 ## Unexpected behavior
 
@@ -218,6 +228,12 @@ lifecycle::pkg_lifecycle_statuses("tidyr")
 ## Packages that help with installing/ attaching packages (yes, they exist)
 
 Some books, like the [Epidemiologist R Handbook](https://epirhandbook.com/en/), recommend that you use the {pacman} package to install and load packages. This package has some extra utility that may be helpful. Other packages include {pak}, which have functions for installing packages from GitHub or other sources. There are other ways to install packages but beyond the scope of this document. See: [The Comprehensive Guide to Installing R Packages from CRAN, Bioconductor, GitHub and Co.](The%20Comprehensive%20Guide%20to%20Installing%20R%20Packages%20from%20CRAN,%20Bioconductor,%20GitHub%20and%20Co.)
+
+# Cheatsheets
+
+Cheatsheets are a good way of becoming familiar with package functions! Many of the most popular packages have cheatsheets as well. Access them here: [Posit Cheatsheets](https://rstudio.github.io/cheatsheets/)
+
+![](images/clipboard-1345827158.png)
 
 # Additional reading
 
