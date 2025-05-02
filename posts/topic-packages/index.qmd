@@ -110,7 +110,7 @@ To disambiguate your code, you can use functions from a particular package *with
 
 In this example, I'm accessing the function called `pivot_longer()` from the {tidyr} package. Notably, this did *not* require attaching the {tidyr} package using `library()`, BUT the package would still need to be installed first using `install.packages()`. While this is less clean (and longer!) than simply attaching the full package, I believe beginner R programmers greatly benefit from disambiguating their code using `::`.
 
-### Where does it go in my script? 
+### Where does it go in my script?
 
 Generally, I like to load all packages at the beginning of my R script. I will have a code chunk or section dedicated to "setup," which might include several calls to `library()` and maybe loading in some data.
 
@@ -150,7 +150,7 @@ library(dplyr)
 
 If the above `filter()` was run, it would result in an **Error**, and prevent me from rendering this document. The error would read:
 
-```         
+```
 Error:
 ! [conflicted] filter found in 2 packages.
 Either pick the one you want with `::`:
@@ -200,21 +200,21 @@ Packages change over time. Some very prominent packages, like tidyr, supersede o
 # ?tidyr::gather()
 # ?tidyr::pivot_longer()
 
-# create new data "starwars_select" from "starwars" and select specified columns. 
-starwars_select <- starwars |> 
+# create new data "starwars_select" from "starwars" and select specified columns.
+starwars_select <- starwars |>
   dplyr::select(name, hair_color, skin_color, eye_color)
 
 # from "starwars_select", use gather() to make data longer format, then sort by name
-starwars_select |> 
-  tidyr::gather(key = "attribute", value = "value", hair_color, skin_color, eye_color, na.rm = TRUE) |> 
+starwars_select |>
+  tidyr::gather(key = "attribute", value = "value", hair_color, skin_color, eye_color, na.rm = TRUE) |>
   dplyr::arrange(name)
 
 ```
 
 ```{r}
 # Use pivot_longer() to make data longer format
-starwars_select |> 
-  tidyr::pivot_longer(cols = c(hair_color, skin_color, eye_color), names_to = "attribute", values_to = "values", values_drop_na = TRUE) |> 
+starwars_select |>
+  tidyr::pivot_longer(cols = c(hair_color, skin_color, eye_color), names_to = "attribute", values_to = "values", values_drop_na = TRUE) |>
   dplyr::arrange(name)
 
 ```
