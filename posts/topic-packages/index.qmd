@@ -150,7 +150,7 @@ library(dplyr)
 
 If the above `filter()` was run, it would result in an **Error**, and prevent me from rendering this document. The error would read:
 
-```
+```         
 Error:
 ! [conflicted] filter found in 2 packages.
 Either pick the one you want with `::`:
