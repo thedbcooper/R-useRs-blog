@@ -6,6 +6,9 @@ website:
   navbar:
     right:
       - about.qmd
+      - icon: github
+        href: https://github.com/thedbcooper/R-useRs-blog
+
 format:
   html:
     theme:
