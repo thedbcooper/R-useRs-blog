@@ -13,7 +13,7 @@ format:
 ---
 
 # Preface 🗣️
-This post provides an introduction to Maps and Geospatial Data using R programming. Download the source file [here]().
+This post provides an introduction to Maps and Geospatial Data using R programming. Download the source file [here](https://github.com/thedbcooper/R-useRs-blog/blob/main/posts/topic-gis-mapping-intro/index.qmd).
 
 ## Spatial Data
 This post/demonstration uses spatial data, which comes in different formats, shapes, and sizes. This is beyond the scope of this post, but please read read more from these resources:
