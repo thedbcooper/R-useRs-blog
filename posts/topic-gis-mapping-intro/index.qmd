@@ -290,6 +290,7 @@ my_ggplot_map
 
 # More resources
 - [Geocomputation with R: Making Maps with R](https://r.geocompx.org/adv-map): great demonstration of scale/classification styles.
+- [Spatial Data Science (R)](https://r-spatial.org/book/)
 - [Choropleth Maps – A Guide to Data Classification](https://gisgeography.com/choropleth-maps-data-classification/)
 - [R for the Rest of Us: Maps and Geospatial Data](https://book.rfortherestofus.com/maps.html)
 - [Opioid Environment Toolkit for R-Spatial](https://healthyregions.github.io/opioid-environment-toolkit/)
