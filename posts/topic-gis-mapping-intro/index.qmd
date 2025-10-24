@@ -13,13 +13,13 @@ format:
 ---
 
 # Preface 🗣️
-This post provides an introduction to Maps and Geospatial Data using R programming. Download the source file [here](https://github.com/thedbcooper/R-useRs-blog/blob/main/posts/topic-gis-mapping-intro/index.qmd).
+This post provides an introduction to Maps and Geospatial Data using R programming. Download the source file [here](https://github.com/thedbcooper/R-useRs-blog/blob/main/posts/topic-gis-mapping-intro/index.qmd){target="_blank"}.
 
 ## Spatial Data
 This post/demonstration uses spatial data, which comes in different formats, shapes, and sizes. This is beyond the scope of this post, but please read read more from these resources:
 
-- [R for the Rest of Us: Maps](https://book.rfortherestofus.com/maps.html)
-- [Justic Community Opioid Innoviation Network: R-Spatial Toolkit](https://healthyregions.github.io/opioid-environment-toolkit/orientation.html).
+- [R for the Rest of Us: Maps](https://book.rfortherestofus.com/maps.html){target="_blank"}
+- [Justic Community Opioid Innoviation Network: R-Spatial Toolkit](https://healthyregions.github.io/opioid-environment-toolkit/orientation.html){target="_blank"}
 
 ::: {.callout-tip collapse="false"}
 ## Snippet from "R for the Rest of Us"
@@ -27,9 +27,9 @@ This post/demonstration uses spatial data, which comes in different formats, sha
 
 You might think you need specialized mapmaking software like ArcGIS to make maps, but it’s an expensive tool. And while Excel has added support for mapmaking in recent years, its features are limited (for example, you can’t use it to make maps based on street addresses). Even QGIS, an open source tool similar to ArcGIS, still requires learning new skills.
 
-Using R for mapmaking is more flexible than using Excel, less expensive than using ArcGIS, and based on syntax you already know. It also lets you perform all of your data manipulation tasks with one tool and apply the principles of high-quality data visualization discussed in Chapter 2. In this chapter, you’ll work with simple features of geospatial data and examine Madjid’s code to understand how he created this map. You’ll also learn where to find geospatial data and how to use it to make your own maps.
+Using R for mapmaking is more flexible than using Excel, less expensive than using ArcGIS, and based on syntax you already know...
 
-You don’t need to be a GIS expert to make maps, but you do need to understand a few things about how geospatial data works, starting with its two main types: vector and raster. Vector data uses points, lines, and polygons to represent the world. Raster data, which often comes from digital photographs, ties each pixel in an image to a specific geographic location. Vector data tends to be easier to work with, and you’ll be using it exclusively in this chapter.
+You don’t need to be a GIS expert to make maps, but you do need to understand a few things about how geospatial data works, starting with its two main types: vector and raster. Vector data uses points, lines, and polygons to represent the world. Raster data, which often comes from digital photographs, ties each pixel in an image to a specific geographic location.
 
 In the past, working with geospatial data meant mastering competing standards, each of which required learning a different approach. Today, though, most people use the simple features model (often abbreviated as sf) for working with vector geospatial data, which is easier to understand."
 
@@ -47,7 +47,7 @@ We will do the following:
 -   Create a choropleth map with the `ggplot2` package.
 -   Create a choropleth map with the `tmap` package.
 
-# Getting Started
+# Prepare Data
 ## Load Packages
 
 We will use the following packages in this tutorial:
@@ -61,6 +61,7 @@ We will use the following packages in this tutorial:
 - `janitor`: clean/standardize column names
 
 First, load the required packages. *Note:* You may see messages about GEOS, GDAL, and PROJ. These refer to software libraries that allow you to work with spatial data.
+You results may differ if you are using a differnt version of R and/or different package versions. Check out my [session info](#reproducibility) below.
 
 ```{r}
 #| warning: false
@@ -75,7 +76,7 @@ library(janitor)
 
 ## Prepare Spatial Data
 
-Our primary spatial data comes from a geoJSON file of Kentucky Counties from the [KY Gov Maps Open Data Portal](https://opengisdata.ky.gov/datasets/kygeonet::kentucky-county-polygons/about). It contains polygons/shapes for all 120 Kentucky Counties.
+Our primary spatial data comes from a geoJSON file of Kentucky Counties from the [KY Gov Maps Open Data Portal](https://opengisdata.ky.gov/datasets/kygeonet::kentucky-county-polygons/about){target="_blank"}. It contains polygons/shapes for all 120 Kentucky Counties.
 
 ```{r}
 ky_county_poly <- sf::st_read("https://services3.arcgis.com/ghsX9CKghMvyYjBU/arcgis/rest/services/Ky_County_Polygons_WM/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
@@ -106,7 +107,7 @@ plot(sf::st_geometry(ky_county_poly))
 
 ### CRS Inspection
 
-Check out the coordinate reference system (CRS). It looks to be EPSG:4326, which is the WGS 84 (The Global Grid) CRS widely used by Google Maps or other web mapping services. Confused on coordinate system terminology? Check out [this document](https://www.esri.com/about/newsroom/app/uploads/2020/08/whatsthediff.pdf).
+Check out the coordinate reference system (CRS). It looks to be EPSG:4326, which is the WGS 84 (The Global Grid) CRS widely used by Google Maps or other web mapping services. Confused on coordinate system terminology? Check out [this document](https://www.esri.com/about/newsroom/app/uploads/2020/08/whatsthediff.pdf){target="_blank"}.
 
 ```{r}
 st_crs(ky_county_poly)
@@ -118,7 +119,7 @@ Lets see how switching CRS changes our object.
 
 ### Transform CRS
 
-WGS 84 would work fine for our needs, but let's use a Kentucky specific CRS. You can use the database search features [here](https://epsg.org/crs_6473/NAD83-2011-Kentucky-Single-Zone-ftUS.html?sessionkey=n4ntakc0wq) to find CRS options. The NAD83(2011)/Kentucky Single Zone (ftUS) CRS will fit our needs and convert the unit used for measurement. The CRS registry number is `6473`.
+WGS 84 would work fine for our needs, but let's use a Kentucky specific CRS. You can use the database search features [here](https://epsg.org/crs_6473/NAD83-2011-Kentucky-Single-Zone-ftUS.html?sessionkey=n4ntakc0wq){target="_blank"} to find CRS options. The NAD83(2011)/Kentucky Single Zone (ftUS) CRS will fit our needs and convert the unit used for measurement. The CRS registry number is `6473`.
 
 To transform our CRS, we use the `st_transform()` function. Check out the CRS of our new object. The units now show "US survey foot."
 
@@ -144,7 +145,7 @@ tmap_arrange(ky_county_poly_tmap, ky_county_poly_6473_tmap)
 ```
 
 ## Prepare County Data
-In this tutorial, we'll use the County Health Rankings and Roadmaps [2025 data](https://www.countyhealthrankings.org/health-data/methodology-and-sources/data-documentation). The `life_expectancy_raw_value` column is the average life expectancy for all KY Counties in 2025. First, we remove the first row because it contains meta-data, then we clean the column names. Next, we filter only for KY values, then select and rename two columns to create `fips` and `life_expectancy`.
+In this tutorial, we'll use the County Health Rankings and Roadmaps [2025 data](https://www.countyhealthrankings.org/health-data/methodology-and-sources/data-documentation){target="_blank"}. The `life_expectancy_raw_value` column is the average life expectancy for all KY Counties in 2025. First, we remove the first row because it contains meta-data, then we clean the column names. Next, we filter only for KY values, then select and rename two columns to create `fips` and `life_expectancy`.
 
 ```{r}
 # Read the Excel file
@@ -177,7 +178,7 @@ ky_county_poly_join <- dplyr::left_join(
 )
 ```
 
-Take a look at the resulting data set. We still have 210 rows
+Take a look at the resulting data set. We still have 120 rows
 
 ```{r}
 glimpse(ky_county_poly_join)
@@ -186,36 +187,34 @@ glimpse(ky_county_poly_join)
 # Choropleth Maps
 We will focus on choropleth maps in this tutorial. A choropleth map simply shades geographic regions by numeric values of our choice. We're using `life_expectancy`.
 
-## tmap
-Following the principles of the grammer of graphics, `tmap` ergonomics follow similar syntax/feel to `ggplot2`.
+## ggplot2
+In this first map, I used the `fill` aesthetic in the `geom_sf()` function, which fills the county polygons by life_expectancy. Notice how the default legend and scale use a color gradient. This is not what you'd typically use for a choropleth map and it makes interpretations harder. To fix this, we need to create our own categories for ggplot2. I am not aware of any helper functions to define the scale/classification for typical choropleth options. [This resource](https://gisgeography.com/choropleth-maps-data-classification/){target="_blank"} defines common classification schemes.
 
-```{r }
-my_tmap_map <- tm_shape(ky_county_poly_join, unit = "miles") +
-  tm_polygons(
-    fill = "life_expectancy", # fill color
-    fill.scale = tm_scale_intervals(style = "pretty", values = "-brewer.gn_bu"),
-    fill.legend = tm_legend(
-      title = "Life Expectancy by County (Kentucky)",
-      orientation = "landscape",
-      width = 18,
-      frame = FALSE
-    ),
-    col = "gray50", # border color
-    lwd = 2 # line width
-    ) +
-  tm_layout(
-    frame = FALSE,
-    legend.position = c("left", "top")
+```{r}
+my_ggplot_map <- ggplot(ky_county_poly_join) +
+  geom_sf(
+    aes(fill = life_expectancy),
+    color = "grey50",
+    linewidth = 0.75
   ) +
-  tm_credits(
-    "Source: County Health Rankings & Roadmaps (CHR&R), 2025",
-    position = tm_pos_in(0.4,0)
-  )
+  theme_void() +
+  theme(
+    plot.margin = margin(0, 1, 0, 1, "cm"),
+    plot.background = element_rect(fill = "white"),
+    legend.position = "inside",
+    legend.position.inside = c(0.075,0.85),
+    legend.box = "vertical",
+    legend.justification = "left",
+    legend.box.just = "left",
+    legend.box.spacing = unit(0.5, "lines"),
+    legend.spacing = unit(0.1, "lines")
+  ) +
+  labs(caption = "Source: County Health Rankings & Roadmaps (CHR&R), 2025")
 
-my_tmap_map
+my_ggplot_map
 ```
 
-## ggplot2
+Let's use the `classIntervals()` function from the `classInt` package to define "pretty" breaks, which are similar to "natural breaks," but attempt to use pretty whole integer numbers for breaks. I'll display a few labels for counties: the 20 lowest average life expectancy OR the 10 highest population counties. I use the `ggrepel` package and `geom_label_repel()` function to add the labels, which will automatically "repel" them to avoid overlap.
 
 ```{r}
 # create data for labels
@@ -273,6 +272,37 @@ my_ggplot_map <- ky_county_poly_join |>
 my_ggplot_map
 ```
 
+## tmap
+Following the principles of the grammer of graphics, `tmap` ergonomics follow similar syntax/feel to `ggplot2`.
+
+The `tm_shape()` function begins the map plot, followed by the `tm_polygons()` function to define the county fill details. Note that `tmap` let's use define the scale (and therefore classification method) using the `tm_scale_intervals()` function. Howerver, there is no `ggrepel` equivalent for `tmap` yet. See [this](https://github.com/r-tmap/tmap/issues/337){target="_blank"}.
+
+```{r }
+my_tmap_map <- tm_shape(ky_county_poly_join, unit = "miles") +
+  tm_polygons(
+    fill = "life_expectancy", # fill color
+    fill.scale = tm_scale_intervals(style = "pretty", values = "-brewer.gn_bu"),
+    fill.legend = tm_legend(
+      title = "Life Expectancy by County (Kentucky)",
+      orientation = "landscape",
+      width = 18,
+      frame = FALSE
+    ),
+    col = "gray50", # border color
+    lwd = 2 # line width
+    ) +
+  tm_layout(
+    frame = FALSE,
+    legend.position = c("left", "top")
+  ) +
+  tm_credits(
+    "Source: County Health Rankings & Roadmaps (CHR&R), 2025",
+    position = tm_pos_in(0.4,0)
+  )
+
+my_tmap_map
+```
+
 ## Comparison
 They are very similar!
 
@@ -291,14 +321,11 @@ my_ggplot_map
 ```
 
 # More resources
-- [Geocomputation with R: Making Maps with R](https://r.geocompx.org/adv-map): great demonstration of scale/classification styles.
-- [Spatial Data Science (R)](https://r-spatial.org/book/)
-- [Choropleth Maps – A Guide to Data Classification](https://gisgeography.com/choropleth-maps-data-classification/)
-- [R for the Rest of Us: Maps and Geospatial Data](https://book.rfortherestofus.com/maps.html)
-- [Opioid Environment Toolkit for R-Spatial](https://healthyregions.github.io/opioid-environment-toolkit/)
-
-# Notes
-There is no `ggrepel` equivalent for `tmap` yet. See [this](https://github.com/r-tmap/tmap/issues/337).
+- [Geocomputation with R: Making Maps with R](https://r.geocompx.org/adv-map){target="_blank"}: great demonstration of scale/classification styles.
+- [Spatial Data Science (R)](https://r-spatial.org/book/){target="_blank"}
+- [Choropleth Maps – A Guide to Data Classification](https://gisgeography.com/choropleth-maps-data-classification/){target="_blank"}
+- [R for the Rest of Us: Maps and Geospatial Data](https://book.rfortherestofus.com/maps.html){target="_blank"}
+- [Opioid Environment Toolkit for R-Spatial](https://healthyregions.github.io/opioid-environment-toolkit/){target="_blank"}
 
 # Reproducibility
 Below, you'll see my R version, platform, OS (Windows), and all required packages for this exercise.
