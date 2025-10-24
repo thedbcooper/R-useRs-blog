@@ -15,3 +15,6 @@ format:
       - cosmo
       - brand
     css: styles.css
+
+execute:
+  freeze: auto
