@@ -274,6 +274,8 @@ my_ggplot_map
 ```
 
 ## Comparison
+They are very similar!
+
 `tmap` Map
 
 ```{r}
